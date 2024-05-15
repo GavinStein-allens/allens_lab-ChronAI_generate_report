@@ -4,6 +4,7 @@ from langchain.embeddings import AzureOpenAIEmbeddings
 from dotenv import load_dotenv
 import os
 import json
+import logging
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
@@ -18,8 +19,6 @@ request will receive a record list in the body. Each record will have the below 
 The function will return a record list where each record will have the below structure:
 {
     "id": String (GUID)
-    "originalEmbedding: []float
-    "updatedEmbedding": []float
     "comparison": float
     "originalText": String
     "updatedText": String
@@ -52,6 +51,7 @@ def generateReport(req: func.HttpRequest) -> func.HttpResponse:
 
         # Get the JSON body from the request
         body = req.get_json()
+        logging.log(body)
         records = body.get('records')
         return_records = []
 
@@ -89,6 +89,7 @@ def generateReport(req: func.HttpRequest) -> func.HttpResponse:
 
     except Exception as e:
         # Return an error response if an exception occurs
+        logging.error(e)
         return func.HttpResponse(
             f"An error occurred while trying to process your request: {e}",
             status_code=598
