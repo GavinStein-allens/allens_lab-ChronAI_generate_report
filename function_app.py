@@ -4,7 +4,6 @@ from langchain.embeddings import AzureOpenAIEmbeddings
 from dotenv import load_dotenv
 import os
 import json
-import logging
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
@@ -51,7 +50,6 @@ def generateReport(req: func.HttpRequest) -> func.HttpResponse:
 
         # Get the JSON body from the request
         body = req.get_json()
-        logging.log(body)
         records = body.get('records')
         return_records = []
 
@@ -89,7 +87,6 @@ def generateReport(req: func.HttpRequest) -> func.HttpResponse:
 
     except Exception as e:
         # Return an error response if an exception occurs
-        logging.error(e)
         return func.HttpResponse(
             f"An error occurred while trying to process your request: {e}",
             status_code=598
